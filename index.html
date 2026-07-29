@@ -7,17 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <style>
-        /* Estilo Base - Tema Retro de Fliperama */
+        /* ESTILOS (CSS) */
         body {
             background-color: #1a1a1a;
             color: #ffffff;
-            font-family: 'Arial', sans-serif; /* Fonte simples para textos longos, facilitando a leitura de todos */
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
             line-height: 1.6;
         }
 
-        /* Container Principal */
         main {
             max-width: 900px;
             margin: 0 auto;
@@ -28,39 +27,15 @@
             box-shadow: 0 0 15px #00ffcc;
         }
 
-        /* Títulos com fonte de Videogame */
         h1, h2, h3 {
             font-family: 'Press Start 2P', monospace;
             text-align: center;
         }
 
-        h1 {
-            color: #ff00ff;
-            font-size: 28px;
-            text-shadow: 3px 3px #000;
-            margin-bottom: 30px;
-        }
+        h1 { color: #ff00ff; font-size: 28px; text-shadow: 3px 3px #000; margin-bottom: 30px; }
+        h2 { color: #00ffcc; font-size: 20px; border-bottom: 3px dashed #ff00ff; padding-bottom: 15px; margin-top: 40px; }
+        h3 { color: #ffff00; font-size: 16px; text-align: left; }
 
-        h2 {
-            color: #00ffcc;
-            font-size: 20px;
-            border-bottom: 3px dashed #ff00ff;
-            padding-bottom: 15px;
-            margin-top: 40px;
-        }
-
-        h3 {
-            color: #ffff00;
-            font-size: 16px;
-            text-align: left;
-        }
-
-        p {
-            font-size: 18px;
-            color: #e0e0e0;
-        }
-
-        /* Destaque para dicas */
         .dica {
             background-color: #4a004a;
             border-left: 5px solid #ff00ff;
@@ -69,7 +44,6 @@
             font-weight: bold;
         }
 
-        /* Espaços para Imagens (Placeholders) */
         .imagem-explicativa {
             width: 100%;
             height: 250px;
@@ -81,21 +55,55 @@
             justify-content: center;
             margin: 20px 0;
             color: #ffff00;
-            font-size: 16px;
+            font-size: 14px;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
         }
 
-        /* Sessão de Boas-Vindas Inclusiva */
         .boas-vindas {
             background-color: #004400;
             border: 2px solid #00ff00;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
+            margin-bottom: 30px;
         }
 
+        .area-busca {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #busca {
+            width: 85%;
+            padding: 15px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            background-color: #000000;
+            color: #00ff00;
+            border: 3px solid #ff00ff;
+            border-radius: 5px;
+            outline: none;
+            box-shadow: 0 0 10px #ff00ff;
+            text-transform: uppercase;
+        }
+
+        #busca::placeholder {
+            color: #005500;
+        }
+        
+        /* Tag de categoria do jogo */
+        .tag-console {
+            display: inline-block;
+            background-color: #ff00ff;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-bottom: 10px;
+            font-family: 'Press Start 2P', monospace;
+        }
     </style>
 </head>
 <body>
@@ -105,60 +113,112 @@
 
         <div class="boas-vindas">
             <p><strong>BEM-VINDES AO NOSSO FLIPERAMA VIRTUAL!</strong></p>
-            <p>Não importa se você é um jogador veterano, se joga apenas no final de semana ou se usa controles adaptados: este espaço é para <strong>todos</strong>. Aqui, vamos aprender juntos os melhores atalhos, truques e "glitches" (erros do jogo) para zerar os maiores clássicos bem mais rápido. Pegue sua ficha e vamos lá!</p>
+            <p>Não importa se você é um jogador veterano, se joga apenas no final de semana ou se usa controles adaptados: este espaço é para <strong>todos</strong>. Nosso objetivo é catalogar 1000 jogos lendários!</p>
         </div>
 
-        <section>
-            <h2>🍄 Super Mario Bros. (NES)</h2>
-            <p>O maior clássico de todos tem um dos atalhos mais famosos da história dos games: a <strong>Warp Zone</strong>.</p>
-            
-            <h3>Passo a Passo: Warp Zone do Mundo 1-2</h3>
-            <p>No final da fase 1-2 (aquela que é no subterrâneo), ao invés de entrar no cano normal para sair da fase, você deve pular em cima dos tijolos no teto e correr por cima da tela até o final.</p>
+        <div class="area-busca">
+            <input type="text" id="busca" placeholder="🔍 DIGITE O NOME DO JOGO...">
+        </div>
 
-            <div class="imagem-explicativa">
-                [IMAGEM 1: Mostre o Mario correndo por CIMA dos tijolos no teto da fase 1-2, passando reto pelo cano de saída padrão.]
-            </div>
-
-            <p class="dica">DICA DE OURO: Cuidado para não cair antes da hora! Continue correndo para a direita até encontrar três canos secretos. Eles te levam direto para os Mundos 2, 3 ou 4!</p>
-            
-            <div class="imagem-explicativa">
-                [IMAGEM 2: Mostre a tela da "Warp Zone" com os três canos e os números 2, 3 e 4 em cima deles.]
-            </div>
-        </section>
-
-        <section>
-            <h2>🦔 Sonic The Hedgehog (Mega Drive)</h2>
-            <p>Quer pular aquelas fases difíceis da água e ir direto para o chefe final? Use o clássico código de <strong>Seleção de Fases</strong>!</p>
-
-            <h3>Passo a Passo: O Código Mágico</h3>
-            <p>Na tela inicial do jogo, quando o Sonic aparecer balançando o dedo, você precisa ser rápido e fazer uma combinação no controle.</p>
-
-            <div class="imagem-explicativa">
-                [IMAGEM 3: Mostre a tela de título clássica do Sonic 1, com o Sonic dentro da argola gigante.]
-            </div>
-
-            <p class="dica">COMANDO: Pressione Cima, Baixo, Esquerda, Direita. Você vai ouvir um barulho de argola. Segure o botão 'A' e aperte 'Start'. Pronto, menu secreto liberado!</p>
-
-            <div class="imagem-explicativa">
-                [IMAGEM 4: Mostre o menu secreto de seleção de fases, com a tela preta e o texto em azul escrito "Level Select".]
-            </div>
-        </section>
-
-        <section>
-            <h2>👻 Pac-Man (Fliperama)</h2>
-            <p>O Pac-Man não tem atalhos normais, mas tem um <strong>esconderijo secreto</strong> onde os fantasmas nunca te acham. Ótimo para fazer uma pausa rápida!</p>
-
-            <h3>Passo a Passo: O Ponto Cego</h3>
-            <p>Existe um lugar específico no labirinto onde, se você ficar virado para cima e não se mexer, os fantasmas passam direto por você sem te ver.</p>
-
-            <div class="imagem-explicativa">
-                [IMAGEM 5: Mostre o mapa do Pac-Man marcando exatamente o local do "ponto cego" (acima e à direita do local onde os fantasmas nascem), com o Pac-Man parado lá.]
-            </div>
-            
-            <p class="dica">ATENÇÃO: Esse truque só funciona se os fantasmas não estiverem olhando diretamente para você no momento em que você entrar no esconderijo!</p>
-        </section>
-
+        <div id="lista-de-jogos"></div>
     </main>
 
-</body>
-</html>
+    <script>
+        // CÓDIGO DO MOTOR DO SITE (JAVASCRIPT)
+        const bancoDeJogos = [
+            {
+                titulo: "Super Mario Bros.",
+                console: "NES",
+                intro: "O maior clássico de todos tem um dos atalhos mais famosos da história dos games: a Warp Zone.",
+                passoAPasso: "No final da fase 1-2 (aquela que é no subterrâneo), ao invés de entrar no cano normal para sair da fase, você deve pular em cima dos tijolos no teto e correr por cima da tela até o final.",
+                textoImagem1: "[IMAGEM 1: Mostre o Mario correndo por CIMA dos tijolos]",
+                dica: "Cuidado para não cair antes da hora! Continue correndo para a direita até encontrar três canos secretos.",
+                textoImagem2: "[IMAGEM 2: Mostre a tela da Warp Zone]"
+            },
+            {
+                titulo: "Sonic The Hedgehog",
+                console: "Mega Drive",
+                intro: "Quer pular aquelas fases difíceis da água e ir direto para o chefe final? Use o clássico código de Seleção de Fases!",
+                passoAPasso: "Na tela inicial do jogo, quando o Sonic aparecer balançando o dedo, você precisa ser rápido e fazer uma combinação no controle.",
+                textoImagem1: "[IMAGEM 1: Mostre a tela de título clássica do Sonic 1]",
+                dica: "Pressione Cima, Baixo, Esquerda, Direita. Você vai ouvir um barulho de argola. Segure o botão 'A' e aperte 'Start'.",
+                textoImagem2: "[IMAGEM 2: Mostre o menu secreto de seleção de fases]"
+            },
+            {
+                titulo: "Castlevania: Symphony of the Night",
+                console: "PS1",
+                intro: "Quer pular o chefe 'Death' no começo do jogo para não perder seus equipamentos apelões?",
+                passoAPasso: "No primeiro corredor onde você encontra a Morte, atraia um dos lobos da sala anterior. Deixe ele te atacar exatamente na linha de transição da tela.",
+                textoImagem1: "[IMAGEM 1: Alucard levando o golpe do lobo na borda da tela]",
+                dica: "O golpe vai te jogar direto para a próxima sala, passando por cima da cena em que a Morte rouba seus itens!",
+                textoImagem2: "[IMAGEM 2: Alucard na próxima sala ainda com os itens originais]"
+            },
+            {
+                titulo: "Pokémon Red / Blue",
+                console: "Game Boy",
+                intro: "O famoso glitch do 'MissingNo' permite multiplicar qualquer item raro do seu inventário (como a Master Ball ou Rare Candy) por 128!",
+                passoAPasso: "Fale com o homem na cidade de Viridian que te ensina a capturar Pokémon. Depois, voe direto para a Ilha Cinnabar e use a habilidade 'Surf' na borda direita da ilha, subindo e descendo encostado na terra.",
+                textoImagem1: "[IMAGEM 1: Mostre o jogador surfando exatamente na borda de Cinnabar Island]",
+                dica: "Coloque o item que você quer multiplicar no sexto (6º) espaço da sua mochila antes de encontrar o MissingNo!",
+                textoImagem2: "[IMAGEM 2: Batalha contra o Pokémon bugado MissingNo]"
+            },
+            {
+                titulo: "Donkey Kong Country",
+                console: "SNES",
+                intro: "A fase 'Mine Cart Carnage' é um pesadelo? Existe um atalho no comecinho que pula a fase inteira!",
+                passoAPasso: "Logo no início da fase, não pule no carrinho de mina. Ao invés disso, pule por cima do barril que atira você, caia no buraco encostado na parede esquerda e segure o direcional para a direita.",
+                textoImagem1: "[IMAGEM 1: Donkey Kong pulando por cima do barril inicial da fase do carrinho]",
+                dica: "Se você fizer certo, vai cair em um barril secreto invisível que te atira direto para o final da fase!",
+                textoImagem2: "[IMAGEM 2: Donkey Kong voando pelo cenário até a saída]"
+            },
+            {
+                titulo: "The Legend of Zelda: Ocarina of Time",
+                console: "N64",
+                intro: "Speedrunners usam um glitch chamado 'Wrong Warp' para pular de dentro da primeira masmorra direto para a tela de créditos!",
+                passoAPasso: "É um truque complexo que envolve derrotar o primeiro chefe (Gohma) e usar itens em frames muito específicos antes de entrar no portal de luz azul.",
+                textoImagem1: "[IMAGEM 1: Link na frente do portal azul do chefe Gohma]",
+                dica: "Como é um truque difícil, comece praticando o 'ISG' (Infinite Sword Glitch), que é a base para a maioria dos bugs deste jogo.",
+                textoImagem2: "[IMAGEM 2: Link adulto no castelo caindo no vazio]"
+            },
+            {
+                titulo: "Super Metroid",
+                console: "SNES",
+                intro: "O 'Mockball' é um glitch obrigatório para zerar rápido, permitindo que a Samus passe por portas estreitas sem precisar do item Morph Ball Bombs.",
+                passoAPasso: "Corra em direção a um espaço estreito, pule, aperte para baixo no ar duas vezes bem rápido antes de tocar no chão e segure o botão de pulo. A Samus vai virar bolinha e continuar rolando com a velocidade da corrida!",
+                textoImagem1: "[IMAGEM 1: Samus correndo em direção aos pilares que fecham rápido]",
+                dica: "Isso permite pegar os Super Missiles muito antes da hora, quebrando toda a sequência natural do jogo.",
+                textoImagem2: "[IMAGEM 2: Samus passando por baixo dos pilares como bolinha]"
+            },
+            {
+                titulo: "Mega Man X",
+                console: "SNES",
+                intro: "O jogo esconde o golpe 'Hadouken' (do Street Fighter) que destrói qualquer chefe, incluindo o Sigma, com apenas um hit!",
+                passoAPasso: "Você precisa ter todos os corações, todos os sub-tanks cheios, todas as partes da armadura e passar pela fase do Armored Armadillo. No final da fase, pule no abismo acima da porta do chefe. Faça isso 4 vezes seguidas.",
+                textoImagem1: "[IMAGEM 1: Mega Man X no final da fase do Armadillo subindo a parede do abismo]",
+                dica: "Na 5ª vez que você chegar lá em cima, uma cápsula do Dr. Light vestido de Ryu vai aparecer!",
+                textoImagem2: "[IMAGEM 2: Dr. Light com a faixa do Ryu ensinando o Hadouken]"
+            }
+        ];
+
+        const containerJogos = document.getElementById('lista-de-jogos');
+        const campoBusca = document.getElementById('busca');
+
+        function mostrarJogos(jogosParaMostrar) {
+            containerJogos.innerHTML = '';
+            
+            if(jogosParaMostrar.length === 0) {
+                containerJogos.innerHTML = '<h3 style="text-align:center; margin-top: 40px;">❌ Game Over! Nenhum jogo encontrado.</h3>';
+                return;
+            }
+
+            jogosParaMostrar.forEach(jogo => {
+                const secao = document.createElement('section');
+                secao.innerHTML = `
+                    <h2>${jogo.titulo}</h2>
+                    <span class="tag-console">${jogo.console}</span>
+                    <p>${jogo.intro}</p>
+                    <h3>Passo a Passo</h3>
+                    <p>${jogo.passoAPasso}</p>
+                    <div class="imagem-explicativa">${jogo.textoImagem1}</div>
+                    <p class="dica">🔥 DICA DE OURO: ${jogo.dica}</p>
+                    <div class="imagem-explicativa">${jogo.textoImagem2}</div>
