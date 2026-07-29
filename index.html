@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕹️ Retro Glitch & Speedrun 🕹️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #2d2d2d;
+            padding: 30px;
+            border: 5px solid #00ffcc;
+            border-radius: 15px;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Press Start 2P', monospace;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff00ff;
+            font-size: 28px;
+            text-shadow: 3px 3px #000;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #00ffcc;
+            font-size: 20px;
+            border-bottom: 3px dashed #ff00ff;
+            padding-bottom: 15px;
+            margin-top: 40px;
+        }
+
+        h3 {
+            color: #ffff00;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .dica {
+            background-color: #4a004a;
+            border-left: 5px solid #ff00ff;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .imagem-explicativa {
+            width: 100%;
+            height: 250px;
+            background-color: #000000;
+            border: 3px solid #ffff00;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            color: #ffff00;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .boas-vindas {
+            background-color: #004400;
+            border: 2px solid #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <h1>🕹️ GUIA MASTER: ZERANDO NO MODO TURBO 🕹️</h1>
+
+        <div class="boas-vindas">
+            <p><strong>BEM-VINDES AO NOSSO FLIPERAMA VIRTUAL!</strong></p>
+            <p>Não importa se você é um jogador veterano, se joga apenas no final de semana ou se usa controles adaptados: este espaço é para <strong>todos</strong>. Nosso objetivo é catalogar 1000 jogos lendários!</p>
+        </div>
+
+        <div id="lista-de-jogos"></div>
+    </main>
+
+    <script>
+        // 💾 BANCO DE DADOS DOS JOGOS (Aqui você vai colocar os 1000 jogos!)
+        // Basta copiar um bloco { ... }, colar embaixo e trocar os textos.
+        const bancoDeJogos = [
+            {
+                titulo: "🍄 Super Mario Bros. (NES)",
+                intro: "O maior clássico de todos tem um dos atalhos mais famosos da história dos games: a Warp Zone.",
+                passoAPasso: "No final da fase 1-2 (aquela que é no subterrâneo), ao invés de entrar no cano normal para sair da fase, você deve pular em cima dos tijolos no teto e correr por cima da tela até o final.",
+                textoImagem1: "[IMAGEM 1: Mostre o Mario correndo por CIMA dos tijolos]",
+                dica: "Cuidado para não cair antes da hora! Continue correndo para a direita até encontrar três canos secretos.",
+                textoImagem2: "[IMAGEM 2: Mostre a tela da Warp Zone]"
+            },
+            {
+                titulo: "🦔 Sonic The Hedgehog (Mega Drive)",
+                intro: "Quer pular aquelas fases difíceis da água e ir direto para o chefe final? Use o clássico código de Seleção de Fases!",
+                passoAPasso: "Na tela inicial do jogo, quando o Sonic aparecer balançando o dedo, você precisa ser rápido e fazer uma combinação no controle.",
+                textoImagem1: "[IMAGEM 1: Mostre a tela de título clássica do Sonic 1]",
+                dica: "Pressione Cima, Baixo, Esquerda, Direita. Você vai ouvir um barulho de argola. Segure o botão 'A' e aperte 'Start'.",
+                textoImagem2: "[IMAGEM 2: Mostre o menu secreto de seleção de fases]"
+            },
+            {
+                titulo: "🦇 Castlevania: Symphony of the Night (PS1)",
+                intro: "Quer pular o chefe 'Death' no começo do jogo para não perder seus equipamentos apelões?",
+                passoAPasso: "No primeiro corredor onde você encontra a Morte, atraia um dos lobos da sala anterior. Deixe ele te atacar exatamente na linha de transição da tela.",
+                textoImagem1: "[IMAGEM 1: Alucard levando o golpe do lobo na borda da tela]",
+                dica: "O golpe vai te jogar direto para a próxima sala, passando por cima da cena em que a Morte rouba seus itens!",
+                textoImagem2: "[IMAGEM 2: Alucard na próxima sala ainda com os itens Alucart]"
+            }
+            // Para adicionar o jogo 4, 5, até 1000, é só colocar uma vírgula aqui em cima e adicionar mais blocos!
+        ];
+
+        // ⚙️ MOTOR DO SITE (Lê o banco de dados e cria as seções no HTML)
+        const containerJogos = document.getElementById('lista-de-jogos');
+
+        bancoDeJogos.forEach(jogo => {
+            const secao = document.createElement('section');
+            
+            secao.innerHTML = `
+                <h2>${jogo.titulo}</h2>
+                <p>${jogo.intro}</p>
+                
+                <h3>Passo a Passo</h3>
+                <p>${jogo.passoAPasso}</p>
+
+                <div class="imagem-explicativa">${jogo.textoImagem1}</div>
+
+                <p class="dica">🔥 DICA DE OURO: ${jogo.dica}</p>
+                
+                <div class="imagem-explicativa">${jogo.textoImagem2}</div>
+            `;
+            
+            containerJogos.appendChild(secao);
+        });
+    </script>
+
+</body>
+</html>
