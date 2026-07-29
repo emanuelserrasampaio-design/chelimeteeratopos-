@@ -7,15 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     
     <style>
+        /* Estilo Base - Tema Retro de Fliperama */
         body {
             background-color: #1a1a1a;
             color: #ffffff;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Arial', sans-serif; /* Fonte simples para textos longos, facilitando a leitura de todos */
             margin: 0;
             padding: 20px;
             line-height: 1.6;
         }
 
+        /* Container Principal */
         main {
             max-width: 900px;
             margin: 0 auto;
@@ -26,6 +28,7 @@
             box-shadow: 0 0 15px #00ffcc;
         }
 
+        /* Títulos com fonte de Videogame */
         h1, h2, h3 {
             font-family: 'Press Start 2P', monospace;
             text-align: center;
@@ -52,6 +55,12 @@
             text-align: left;
         }
 
+        p {
+            font-size: 18px;
+            color: #e0e0e0;
+        }
+
+        /* Destaque para dicas */
         .dica {
             background-color: #4a004a;
             border-left: 5px solid #ff00ff;
@@ -60,6 +69,7 @@
             font-weight: bold;
         }
 
+        /* Espaços para Imagens (Placeholders) */
         .imagem-explicativa {
             width: 100%;
             height: 250px;
@@ -71,20 +81,21 @@
             justify-content: center;
             margin: 20px 0;
             color: #ffff00;
-            font-size: 14px;
+            font-size: 16px;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
         }
 
+        /* Sessão de Boas-Vindas Inclusiva */
         .boas-vindas {
             background-color: #004400;
             border: 2px solid #00ff00;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 40px;
         }
+
     </style>
 </head>
 <body>
@@ -94,66 +105,60 @@
 
         <div class="boas-vindas">
             <p><strong>BEM-VINDES AO NOSSO FLIPERAMA VIRTUAL!</strong></p>
-            <p>Não importa se você é um jogador veterano, se joga apenas no final de semana ou se usa controles adaptados: este espaço é para <strong>todos</strong>. Nosso objetivo é catalogar 1000 jogos lendários!</p>
+            <p>Não importa se você é um jogador veterano, se joga apenas no final de semana ou se usa controles adaptados: este espaço é para <strong>todos</strong>. Aqui, vamos aprender juntos os melhores atalhos, truques e "glitches" (erros do jogo) para zerar os maiores clássicos bem mais rápido. Pegue sua ficha e vamos lá!</p>
         </div>
 
-        <div id="lista-de-jogos"></div>
+        <section>
+            <h2>🍄 Super Mario Bros. (NES)</h2>
+            <p>O maior clássico de todos tem um dos atalhos mais famosos da história dos games: a <strong>Warp Zone</strong>.</p>
+            
+            <h3>Passo a Passo: Warp Zone do Mundo 1-2</h3>
+            <p>No final da fase 1-2 (aquela que é no subterrâneo), ao invés de entrar no cano normal para sair da fase, você deve pular em cima dos tijolos no teto e correr por cima da tela até o final.</p>
+
+            <div class="imagem-explicativa">
+                [IMAGEM 1: Mostre o Mario correndo por CIMA dos tijolos no teto da fase 1-2, passando reto pelo cano de saída padrão.]
+            </div>
+
+            <p class="dica">DICA DE OURO: Cuidado para não cair antes da hora! Continue correndo para a direita até encontrar três canos secretos. Eles te levam direto para os Mundos 2, 3 ou 4!</p>
+            
+            <div class="imagem-explicativa">
+                [IMAGEM 2: Mostre a tela da "Warp Zone" com os três canos e os números 2, 3 e 4 em cima deles.]
+            </div>
+        </section>
+
+        <section>
+            <h2>🦔 Sonic The Hedgehog (Mega Drive)</h2>
+            <p>Quer pular aquelas fases difíceis da água e ir direto para o chefe final? Use o clássico código de <strong>Seleção de Fases</strong>!</p>
+
+            <h3>Passo a Passo: O Código Mágico</h3>
+            <p>Na tela inicial do jogo, quando o Sonic aparecer balançando o dedo, você precisa ser rápido e fazer uma combinação no controle.</p>
+
+            <div class="imagem-explicativa">
+                [IMAGEM 3: Mostre a tela de título clássica do Sonic 1, com o Sonic dentro da argola gigante.]
+            </div>
+
+            <p class="dica">COMANDO: Pressione Cima, Baixo, Esquerda, Direita. Você vai ouvir um barulho de argola. Segure o botão 'A' e aperte 'Start'. Pronto, menu secreto liberado!</p>
+
+            <div class="imagem-explicativa">
+                [IMAGEM 4: Mostre o menu secreto de seleção de fases, com a tela preta e o texto em azul escrito "Level Select".]
+            </div>
+        </section>
+
+        <section>
+            <h2>👻 Pac-Man (Fliperama)</h2>
+            <p>O Pac-Man não tem atalhos normais, mas tem um <strong>esconderijo secreto</strong> onde os fantasmas nunca te acham. Ótimo para fazer uma pausa rápida!</p>
+
+            <h3>Passo a Passo: O Ponto Cego</h3>
+            <p>Existe um lugar específico no labirinto onde, se você ficar virado para cima e não se mexer, os fantasmas passam direto por você sem te ver.</p>
+
+            <div class="imagem-explicativa">
+                [IMAGEM 5: Mostre o mapa do Pac-Man marcando exatamente o local do "ponto cego" (acima e à direita do local onde os fantasmas nascem), com o Pac-Man parado lá.]
+            </div>
+            
+            <p class="dica">ATENÇÃO: Esse truque só funciona se os fantasmas não estiverem olhando diretamente para você no momento em que você entrar no esconderijo!</p>
+        </section>
+
     </main>
-
-    <script>
-        // 💾 BANCO DE DADOS DOS JOGOS (Aqui você vai colocar os 1000 jogos!)
-        // Basta copiar um bloco { ... }, colar embaixo e trocar os textos.
-        const bancoDeJogos = [
-            {
-                titulo: "🍄 Super Mario Bros. (NES)",
-                intro: "O maior clássico de todos tem um dos atalhos mais famosos da história dos games: a Warp Zone.",
-                passoAPasso: "No final da fase 1-2 (aquela que é no subterrâneo), ao invés de entrar no cano normal para sair da fase, você deve pular em cima dos tijolos no teto e correr por cima da tela até o final.",
-                textoImagem1: "[IMAGEM 1: Mostre o Mario correndo por CIMA dos tijolos]",
-                dica: "Cuidado para não cair antes da hora! Continue correndo para a direita até encontrar três canos secretos.",
-                textoImagem2: "[IMAGEM 2: Mostre a tela da Warp Zone]"
-            },
-            {
-                titulo: "🦔 Sonic The Hedgehog (Mega Drive)",
-                intro: "Quer pular aquelas fases difíceis da água e ir direto para o chefe final? Use o clássico código de Seleção de Fases!",
-                passoAPasso: "Na tela inicial do jogo, quando o Sonic aparecer balançando o dedo, você precisa ser rápido e fazer uma combinação no controle.",
-                textoImagem1: "[IMAGEM 1: Mostre a tela de título clássica do Sonic 1]",
-                dica: "Pressione Cima, Baixo, Esquerda, Direita. Você vai ouvir um barulho de argola. Segure o botão 'A' e aperte 'Start'.",
-                textoImagem2: "[IMAGEM 2: Mostre o menu secreto de seleção de fases]"
-            },
-            {
-                titulo: "🦇 Castlevania: Symphony of the Night (PS1)",
-                intro: "Quer pular o chefe 'Death' no começo do jogo para não perder seus equipamentos apelões?",
-                passoAPasso: "No primeiro corredor onde você encontra a Morte, atraia um dos lobos da sala anterior. Deixe ele te atacar exatamente na linha de transição da tela.",
-                textoImagem1: "[IMAGEM 1: Alucard levando o golpe do lobo na borda da tela]",
-                dica: "O golpe vai te jogar direto para a próxima sala, passando por cima da cena em que a Morte rouba seus itens!",
-                textoImagem2: "[IMAGEM 2: Alucard na próxima sala ainda com os itens Alucart]"
-            }
-            // Para adicionar o jogo 4, 5, até 1000, é só colocar uma vírgula aqui em cima e adicionar mais blocos!
-        ];
-
-        // ⚙️ MOTOR DO SITE (Lê o banco de dados e cria as seções no HTML)
-        const containerJogos = document.getElementById('lista-de-jogos');
-
-        bancoDeJogos.forEach(jogo => {
-            const secao = document.createElement('section');
-            
-            secao.innerHTML = `
-                <h2>${jogo.titulo}</h2>
-                <p>${jogo.intro}</p>
-                
-                <h3>Passo a Passo</h3>
-                <p>${jogo.passoAPasso}</p>
-
-                <div class="imagem-explicativa">${jogo.textoImagem1}</div>
-
-                <p class="dica">🔥 DICA DE OURO: ${jogo.dica}</p>
-                
-                <div class="imagem-explicativa">${jogo.textoImagem2}</div>
-            `;
-            
-            containerJogos.appendChild(secao);
-        });
-    </script>
 
 </body>
 </html>
