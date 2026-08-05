@@ -22,7 +22,8 @@
         .item-jogo.ativo { background-color: #00ffcc; color: #000000; border-color: #00ffcc; font-weight: bold; }
         .painel-detalhes { flex: 2; background-color: #222222; padding: 20px; border: 3px solid #00ffcc; border-radius: 10px; min-height: 400px; }
         .dica { background-color: #4a004a; border-left: 5px solid #ff00ff; padding: 15px; border-radius: 5px; font-weight: bold; }
-        .imagem-explicativa { width: 100%; height: 180px; background-color: #000000; border: 3px solid #ffff00; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 20px 0; color: #ffff00; font-size: 12px; text-align: center; padding: 15px; box-sizing: border-box; }
+        .imagem-explicativa { width: 100%; height: 220px; background-color: #000000; border: 3px solid #ffff00; border-radius: 8px; overflow: hidden; margin: 20px 0; display: flex; align-items: center; justify-content: center; }
+        .imagem-explicativa img { width: 100%; height: 100%; object-fit: cover; }
         .tag-console { display: inline-block; background-color: #ff00ff; color: white; padding: 4px 8px; border-radius: 3px; font-size: 10px; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; }
         @media (max-width: 768px) { .conteudo-flex { flex-direction: column; } .painel-lista { max-height: 250px; } }
     </style>
@@ -49,33 +50,64 @@
     </div>
 
     <script>
-        // API Gratuita carregando lista de jogos dinamicamente
-        const API_KEY = 'c53a7015984d4bb285251c802b7da23f'; // Chave pública de testes
+        const API_KEY = 'c53a7015984d4bb285251c802b7da23f';
         let bancoDeJogos = [];
 
         const listaBotoes = document.getElementById('lista-botoes');
         const painelDetalhes = document.getElementById('detalhes-jogo');
 
-        async function carregarMilJogos() {
+        // Catálogo de segurança caso a API falhe ou fique indisponível
+        const dadosFallback = [
+            {
+                titulo: "Super Mario Bros.",
+                console: "NES",
+                intro: "Lançado em 1985 para o Nintendo Entertainment System.",
+                passoAPasso: "Corra, pule nos inimigos e alcance o mastro final da fase em tempo recorde.",
+                imagemUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
+                dica: "Na fase 1-2, suba pelo teto para acessar a Warp Zone e pular direto para o mundo 4!"
+            },
+            {
+                titulo: "Sonic the Hedgehog",
+                console: "SEGA Genesis",
+                intro: "Lançado em 1991 para o Mega Drive/Genesis.",
+                passoAPasso: "Mantenha a velocidade máxima, colete argolas para proteção e derrote Robotnik.",
+                imagemUrl: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80",
+                dica: "Na tela de título, pressione Cima, Baixo, Esquerda, Direita para ativar a seleção de fases!"
+            }
+        ];
+
+        async function carregarJogos() {
             try {
-                // Busca os jogos da API (80 jogos por página)
-                const resposta = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=80`);
+                // page_size alterado para 40 (limite máximo suportado pela API RAWG)
+                const resposta = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`);
+                
+                if (!resposta.ok) {
+                    throw new Error(`Erro na API HTTP: ${resposta.status}`);
+                }
+
                 const dados = await resposta.json();
                 
-                bancoDeJogos = dados.results.map(jogo => ({
-                    titulo: jogo.name,
-                    console: jogo.platforms ? jogo.platforms[0].platform.name : 'Retro',
-                    intro: `Jogo lançado em ${jogo.released || 'N/A'} com avaliação ${jogo.rating}/5.`,
-                    passoAPasso: "Acesse o menu principal do jogo, selecione o modo campanha e utilize os atalhos de controle.",
-                    textoImagem1: `[IMAGEM 1: Tela principal de ${jogo.name}]`,
-                    dica: `Aproveite as mecânicas do console para obter conquistas e pontuações mais altas!`,
-                    textoImagem2: `[IMAGEM 2: Gameplay em ação]`
-                }));
+                if (dados.results && dados.results.length > 0) {
+                    bancoDeJogos = dados.results.map(jogo => ({
+                        titulo: jogo.name,
+                        console: jogo.platforms?.[0]?.platform?.name || 'Retro',
+                        intro: `Jogo lançado em ${jogo.released || 'N/A'} com avaliação ${jogo.rating || 'N/A'}/5.`,
+                        passoAPasso: "Acesse o menu principal do jogo, selecione o modo campanha e utilize os atalhos de controle.",
+                        imagemUrl: jogo.background_image || 'https://via.placeholder.com/600x300?text=Sem+Imagem',
+                        dica: `Aproveite as mecânicas de ${jogo.platforms?.[0]?.platform?.name || 'console'} para otimizar suas rotas de Speedrun!`
+                    }));
+                } else {
+                    throw new Error("Nenhum dado retornado da API.");
+                }
 
-                criarListaDeBotoes();
-                if(bancoDeJogos.length > 0) carregarInstrucoes(0);
             } catch (erro) {
-                listaBotoes.innerHTML = 'Erro ao carregar catálogo de jogos.';
+                console.warn("Falha ao consultar API RAWG, carregando catálogo de reserva:", erro);
+                bancoDeJogos = dadosFallback;
+            } finally {
+                criarListaDeBotoes();
+                if (bancoDeJogos.length > 0) {
+                    carregarInstrucoes(0);
+                }
             }
         }
 
@@ -88,14 +120,15 @@
                 <p>${jogo.intro}</p>
                 <h3>Passo a Passo</h3>
                 <p>${jogo.passoAPasso}</p>
-                <div class="imagem-explicativa">${jogo.textoImagem1}</div>
+                <div class="imagem-explicativa">
+                    <img src="${jogo.imagemUrl}" alt="Capa de ${jogo.titulo}" loading="lazy">
+                </div>
                 <p class="dica">🔥 DICA DE OURO: ${jogo.dica}</p>
-                <div class="imagem-explicativa">${jogo.textoImagem2}</div>
             `;
 
             const botoes = document.querySelectorAll('.item-jogo');
             botoes.forEach((btn, idx) => {
-                if(idx === indexJogo) btn.classList.add('ativo');
+                if (idx === indexJogo) btn.classList.add('ativo');
                 else btn.classList.remove('ativo');
             });
         }
@@ -111,7 +144,8 @@
             });
         }
 
-        carregarMilJogos();
+        // Executa o carregamento da API
+        carregarJogos();
     </script>
 </body>
 </html>
