@@ -1,17 +1,25 @@
-import json
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kombate Pixel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="ui">
+            <div class="health-bar-container">
+                <div id="playerHealth" class="health"></div>
+            </div>
+            <div class="timer">60</div>
+            <div class="health-bar-container">
+                <div id="enemyHealth" class="health"></div>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
 
-# Gera 1000 jogos fictícios/estruturados
-jogos = []
-for i in range(1, 1001):
-    jogos.append({
-        "titulo": f"Jogo Retro #{i}",
-        "console": "Console Retro",
-        "intro": f"Descrição e detalhes do jogo clássico número {i}.",
-        "passoAPasso": f"Passo a passo para completar o desafio do jogo {i}.",
-        "textoImagem1": f"[IMAGEM 1: Screenshot do Jogo {i}]",
-        "dica": f"Dica especial para vencer a fase final do Jogo {i}.",
-        "textoImagem2": f"[IMAGEM 2: Tela de Vitória {i}]"
-    })
-
-# Salva a estrutura no JavaScript dentro do HTML
-print(f"Total de {len(jogos)} jogos gerados com sucesso!")
+    <script src="script.js"></script>
+</body>
+</html>
