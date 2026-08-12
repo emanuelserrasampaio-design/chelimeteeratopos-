@@ -1,11 +1,4 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = 1024;
-canvas.height = 576;
-const GRAVITY = 0.7;
-
-// --- DADOS DOS 5 PERSONAGENS ---
+// --- DADOS DOS PERSONAGENS ---
 const CHARACTERS = {
     ninja:     { name: "Kage",     speed: 7, power: 12, hp: 100, color: "#2277ff" },
     ciborgue:  { name: "VX-9",     speed: 4, power: 18, hp: 120, color: "#888888" },
@@ -14,10 +7,51 @@ const CHARACTERS = {
     demonio:   { name: "Ignis",    speed: 5, power: 16, hp: 110, color: "#ff2222" }
 };
 
+let canvas, ctx;
 let player1, player2;
 let gameLoopId;
 let gameTime = 99;
 let timerInterval;
+const GRAVITY = 0.7;
+
+// --- FUNÇÃO DE SELEÇÃO GLOBAL ---
+window.selectCharacter = function(charKey) {
+    canvas = document.getElementById('gameCanvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = 1024;
+    canvas.height = 576;
+
+    const p1Stats = CHARACTERS[charKey];
+    if (!p1Stats) {
+        alert("Personagem não encontrado!");
+        return;
+    }
+
+    const keysArr = Object.keys(CHARACTERS);
+    const p2Key = keysArr[Math.floor(Math.random() * keysArr.length)];
+    const p2Stats = CHARACTERS[p2Key];
+
+    player1 = new Fighter({
+        position: { x: 200, y: 0 },
+        stats: p1Stats
+    });
+
+    player2 = new Fighter({
+        position: { x: 750, y: 0 },
+        stats: p2Stats,
+        isAI: true,
+        facingLeft: true
+    });
+
+    document.getElementById('p1-name').innerText = p1Stats.name;
+    document.getElementById('p2-name').innerText = `${p2Stats.name} (CPU)`;
+
+    document.getElementById('selection-screen').classList.add('hidden');
+    document.getElementById('hud').classList.remove('hidden');
+
+    startTimer();
+    animate();
+};
 
 // --- CLASSE DO LUTADOR ---
 class Fighter {
@@ -43,16 +77,13 @@ class Fighter {
     }
 
     draw() {
-        // Corpo do Lutador
         ctx.fillStyle = this.stats.color;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-        // Indicador de Olhos/Orientação
         ctx.fillStyle = "#000";
         const eyeX = this.facingLeft ? this.position.x + 10 : this.position.x + 40;
         ctx.fillRect(eyeX, this.position.y + 20, 10, 10);
 
-        // Hitbox do Ataque
         if (this.isAttacking) {
             ctx.fillStyle = this.attackType === 'heavy' ? 'orange' : 'yellow';
             ctx.fillRect(
@@ -139,7 +170,7 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'd' || e.key === 'D') keys.d = false;
 });
 
-// --- COLISÃO E HUD ---
+// --- SISTEMA DE DANO E HUD ---
 function checkHit(attacker, defender) {
     if (!attacker.isAttacking) return false;
 
@@ -167,36 +198,6 @@ function updateHUD() {
     document.getElementById('p2-health').style.width = `${p2Pct}%`;
 }
 
-// --- SELEÇÃO DE PERSONAGEM E INÍCIO ---
-function selectCharacter(charKey) {
-    const p1Stats = CHARACTERS[charKey];
-    
-    const keysArr = Object.keys(CHARACTERS);
-    const p2Key = keysArr[Math.floor(Math.random() * keysArr.length)];
-    const p2Stats = CHARACTERS[p2Key];
-
-    player1 = new Fighter({
-        position: { x: 200, y: 0 },
-        stats: p1Stats
-    });
-
-    player2 = new Fighter({
-        position: { x: 750, y: 0 },
-        stats: p2Stats,
-        isAI: true,
-        facingLeft: true
-    });
-
-    document.getElementById('p1-name').innerText = p1Stats.name;
-    document.getElementById('p2-name').innerText = `${p2Stats.name} (CPU)`;
-
-    document.getElementById('selection-screen').classList.add('hidden');
-    document.getElementById('hud').classList.remove('hidden');
-
-    startTimer();
-    animate();
-}
-
 function startTimer() {
     timerInterval = setInterval(() => {
         if (gameTime > 0) {
@@ -206,19 +207,16 @@ function startTimer() {
     }, 1000);
 }
 
-// --- LOOP PRINCIPAL DE JOGO ---
+// --- LOOP DA ANIMAÇÃO ---
 function animate() {
     gameLoopId = requestAnimationFrame(animate);
 
-    // Fundo
     ctx.fillStyle = '#1a0f1a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Chão
     ctx.fillStyle = '#331122';
     ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
 
-    // Movimento P1
     player1.velocity.x = 0;
     if (keys.a) player1.velocity.x = -player1.stats.speed;
     if (keys.d) player1.velocity.x = player1.stats.speed;
@@ -240,17 +238,3 @@ function animate() {
         setTimeout(() => alert(`FIM DE JOGO: ${winner}`), 100);
     }
 }
-
-// --- VINCULAÇÃO DOS BOTÕES DE SELEÇÃO ---
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('.char-btn');
-    
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            const charKey = button.getAttribute('data-char');
-            if (CHARACTERS[charKey]) {
-                selectCharacter(charKey);
-            }
-        });
-    });
-});
