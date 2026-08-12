@@ -259,7 +259,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectCharacter(charKey);
             } else {
                 console.error(`Personagem '${charKey}' não encontrado em CHARACTERS.`);
-            }
+          // Detecta cliques diretos no Canvas
+canvas.addEventListener('click', (event) => {
+    // Pega a posição do Canvas na tela
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calcula a posição do clique em pixels em relação ao Canvas
+    const clickX = (event.clientX - rect.left) * (canvas.width / rect.width);
+    const clickY = (event.clientY - rect.top) * (canvas.height / rect.height);
+
+    // Testa se clicou no Jogador 1
+    if (
+        player1 &&
+        clickX >= player1.position.x &&
+        clickX <= player1.position.x + player1.width &&
+        clickY >= player1.position.y &&
+        clickY <= player1.position.y + player1.height
+    ) {
+        console.log(`Você clicou no ${player1.stats.name}!`);
+        // Aqui você pode fazer algo, como dar um pulo ou tocar um som
+        player1.velocity.y = -10; 
+    }
+});  }
         });
     });
 });  }
