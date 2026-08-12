@@ -11,12 +11,17 @@
         <div id="selection-screen">
             <h1>PIXEL KOMBAT</h1>
             <h2>SELECIONE SEU LUTADOR</h2>
+            
             <div id="character-list">
                 <button class="char-btn" onclick="selectCharacter('ninja')">🥷 Kage (Ninja)</button>
                 <button class="char-btn" onclick="selectCharacter('ciborgue')">🤖 VX-9 (Ciborgue)</button>
                 <button class="char-btn" onclick="selectCharacter('monca')">🧘‍♀️ Mei (Monja)</button>
                 <button class="char-btn" onclick="selectCharacter('esqueleto')">💀 Skell (Esqueleto)</button>
                 <button class="char-btn" onclick="selectCharacter('demonio')">😈 Ignis (Demônio)</button>
+            </div>
+
+            <div id="like-container">
+                <button id="like-btn" onclick="addLike()">❤️ <span id="like-count">0</span> Curtidas</button>
             </div>
         </div>
 
