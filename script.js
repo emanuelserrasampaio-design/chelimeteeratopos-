@@ -1,10 +1,10 @@
 // --- CONFIGURAÇÕES E BANCO DE LUTADORES ---
 const CHARACTERS = {
-    ninja:     { name: "Kage",     speed: 7, power: 12, hp: 100, color: "#2277ff" },
-    ciborgue:  { name: "VX-9",     speed: 4, power: 18, hp: 120, color: "#888888" },
-    monca:     { name: "Mei",      speed: 8, power: 10, hp: 90,  color: "#ffaa00" },
-    esqueleto: { name: "Skell",    speed: 6, power: 14, hp: 95,  color: "#eeeeee" },
-    demonio:   { name: "Ignis",    speed: 5, power: 16, hp: 110, color: "#ff2222" }
+    ninja:     { name: "Kage",     speed: 8, power: 14, hp: 100, color: "#2277ff" },
+    ciborgue:  { name: "VX-9",     speed: 5, power: 20, hp: 130, color: "#888888" },
+    monca:     { name: "Mei",      speed: 9, power: 12, hp: 90,  color: "#ffaa00" },
+    esqueleto: { name: "Skell",    speed: 7, power: 16, hp: 100, color: "#eeeeee" },
+    demonio:   { name: "Ignis",    speed: 6, power: 18, hp: 115, color: "#ff2222" }
 };
 
 let canvas, ctx;
@@ -38,7 +38,7 @@ window.selectCharacter = function(charKey) {
     const p1Stats = CHARACTERS[charKey];
     if (!p1Stats) return;
 
-    // Seleciona um oponente aleatório para a CPU
+    // Seleciona oponente aleatório
     const keysArr = Object.keys(CHARACTERS);
     const p2Key = keysArr[Math.floor(Math.random() * keysArr.length)];
     const p2Stats = CHARACTERS[p2Key];
@@ -56,7 +56,7 @@ window.selectCharacter = function(charKey) {
     });
 
     document.getElementById('p1-name').innerText = p1Stats.name;
-    document.getElementById('p2-name').innerText = `${p2Stats.name} (CPU)`;
+    document.getElementById('p2-name').innerText = `${p2Stats.name} (CPU HARD)`;
 
     document.getElementById('selection-screen').classList.add('hidden');
     document.getElementById('hud').classList.remove('hidden');
@@ -71,74 +71,73 @@ class Fighter {
         this.position = position;
         this.velocity = { x: 0, y: 0 };
         this.width = 60;
-        this.height = 120;
+        this.height = 140;
         this.stats = stats;
         this.health = stats.hp;
         this.maxHealth = stats.hp;
         this.isGrounded = false;
         this.isAttacking = false;
+        this.attackType = null;
         this.facingLeft = facingLeft;
         this.isAI = isAI;
 
         this.attackBox = {
             position: { x: this.position.x, y: this.position.y },
-            width: 80,
-            height: 40
+            width: 90,
+            height: 50
         };
     }
 
-    // Desenha o lutador em estilo Pixel Art (Blocos de Pixels)
     draw() {
+        // Corpo em Pixel Art simples
         const x = this.position.x;
         const y = this.position.y;
-        const pSize = 10; // Tamanho de cada "pixel"
+        const pSize = 12;
 
-        // Matriz de Pixel Art do Personagem (1 = Cor Principal, 2 = Detalhe/Olhos, 3 = Cinto/Acessório)
         const pixelMatrix = [
-            [0, 1, 1, 1, 0], // Cabeça
-            [0, 1, 2, 1, 0], // Rosto / Olho
-            [0, 1, 1, 1, 0], // Queixo
-            [1, 1, 3, 1, 1], // Peito / Ombros
-            [1, 1, 1, 1, 1], // Tronco
-            [0, 3, 3, 3, 0], // Cinto
-            [0, 1, 0, 1, 0], // Pernas (Abertas)
+            [0, 1, 1, 1, 0],
+            [0, 1, 2, 1, 0],
+            [0, 1, 1, 1, 0],
+            [1, 1, 3, 1, 1],
+            [1, 1, 1, 1, 1],
+            [0, 3, 3, 3, 0],
             [0, 1, 0, 1, 0],
-            [1, 1, 0, 1, 1]  // Pés
+            [0, 1, 0, 1, 0],
+            [1, 1, 0, 1, 1]
         ];
 
         ctx.save();
-
-        // Desenha a matriz em pixels
         for (let r = 0; r < pixelMatrix.length; r++) {
             for (let c = 0; c < pixelMatrix[r].length; c++) {
                 const val = pixelMatrix[r][c];
                 if (val === 0) continue;
 
-                if (val === 1) ctx.fillStyle = this.stats.color; // Cor do lutador
-                if (val === 2) ctx.fillStyle = '#ffffff';        // Olhos/Máscara
-                if (val === 3) ctx.fillStyle = '#000000';        // Detalhe/Cinto
+                if (val === 1) ctx.fillStyle = this.stats.color;
+                if (val === 2) ctx.fillStyle = '#ffffff';
+                if (val === 3) ctx.fillStyle = '#000000';
 
-                // Inverte o desenho se estiver olhando para a esquerda
                 let drawX = this.facingLeft 
-                    ? x + (pixelMatrix[0].length - 1 - c) * pSize * 1.2
-                    : x + c * pSize * 1.2;
+                    ? x + (pixelMatrix[0].length - 1 - c) * pSize
+                    : x + c * pSize;
 
-                ctx.fillRect(drawX, y + r * pSize * 1.3, pSize * 1.2, pSize * 1.3);
+                ctx.fillRect(drawX, y + r * pSize * 1.2, pSize, pSize * 1.2);
             }
         }
 
-        // Efeito visual de Pixel Art no Ataque
+        // Ataque
         if (this.isAttacking) {
-            ctx.fillStyle = '#ffcc00';
-            const atkX = this.facingLeft ? x - 40 : x + this.width + 10;
-            ctx.fillRect(atkX, y + 40, 40, 20); // Espada/Soco em pixel
+            ctx.fillStyle = this.attackType === 'heavy' ? '#ff2222' : '#ffcc00';
+            const atkX = this.facingLeft ? x - this.attackBox.width : x + this.width;
+            ctx.fillRect(atkX, y + 40, this.attackBox.width, this.attackBox.height);
         }
 
         ctx.restore();
     }
 
     update(target) {
-        if (target) this.facingLeft = this.position.x > target.position.x;
+        if (target) {
+            this.facingLeft = this.position.x > target.position.x;
+        }
 
         this.attackBox.position.x = this.facingLeft 
             ? this.position.x - this.attackBox.width 
@@ -165,25 +164,40 @@ class Fighter {
         this.draw();
     }
 
-    attack() {
+    attack(type = 'light') {
         if (this.isAttacking) return;
         this.isAttacking = true;
-        setTimeout(() => { this.isAttacking = false; }, 200);
+        this.attackType = type;
+
+        const duration = type === 'heavy' ? 200 : 120;
+        setTimeout(() => {
+            this.isAttacking = false;
+        }, duration);
     }
 
+    // --- INTELIGÊNCIA ARTIFICIAL MODO DIFÍCIL ---
     updateAI(target) {
         const dist = target.position.x - this.position.x;
-        if (Math.abs(dist) > 80) {
-            this.velocity.x = dist > 0 ? this.stats.speed * 0.6 : -this.stats.speed * 0.6;
+        const absDist = Math.abs(dist);
+
+        // Perseguição rápida e sem hesitação
+        if (absDist > 70) {
+            this.velocity.x = dist > 0 ? this.stats.speed * 0.95 : -this.stats.speed * 0.95;
         } else {
             this.velocity.x = 0;
-            if (Math.random() < 0.03) this.attack();
+            // Alta taxa de ataque quando próximo (80% de chance por frame próximo)
+            if (Math.random() < 0.15) {
+                this.attack(Math.random() > 0.4 ? 'heavy' : 'light');
+            }
         }
-        if (Math.random() < 0.005 && this.isGrounded) this.velocity.y = -14;
-    }
-}}
 
-        if (Math.random() < 0.005 && this.isGrounded) {
+        // Tenta desviar pulando se o jogador atacar
+        if (target.isAttacking && absDist < 120 && this.isGrounded && Math.random() < 0.4) {
+            this.velocity.y = -15;
+        }
+
+        // Pulos aleatórios agressivos para encurralar
+        if (Math.random() < 0.02 && this.isGrounded) {
             this.velocity.y = -14;
         }
     }
@@ -242,19 +256,16 @@ function startTimer() {
     }, 1000);
 }
 
-// --- LOOP DE RENDEREZAÇÃO DA ARENA ---
+// --- LOOP DE ANIMAÇÃO ---
 function animate() {
     gameLoopId = requestAnimationFrame(animate);
 
-    // Fundo da Arena
     ctx.fillStyle = '#110a18';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Chão Pixelado
     ctx.fillStyle = '#2b1020';
     ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
 
-    // Movimentação do Jogador 1
     player1.velocity.x = 0;
     if (keys.a) player1.velocity.x = -player1.stats.speed;
     if (keys.d) player1.velocity.x = player1.stats.speed;
@@ -265,7 +276,6 @@ function animate() {
     checkHit(player1, player2);
     checkHit(player2, player1);
 
-    // Fim da Rodada
     if (player1.health <= 0 || player2.health <= 0 || gameTime === 0) {
         cancelAnimationFrame(gameLoopId);
         clearInterval(timerInterval);
@@ -278,7 +288,6 @@ function animate() {
     }
 }
 
-// Inicializa a UI ao carregar
 document.addEventListener('DOMContentLoaded', () => {
     updateLikeUI();
 });
