@@ -1,4 +1,4 @@
-// --- DADOS DOS PERSONAGENS ---
+// --- CONFIGURAÇÕES E BANCO DE LUTADORES ---
 const CHARACTERS = {
     ninja:     { name: "Kage",     speed: 7, power: 12, hp: 100, color: "#2277ff" },
     ciborgue:  { name: "VX-9",     speed: 4, power: 18, hp: 120, color: "#888888" },
@@ -14,6 +14,20 @@ let gameTime = 99;
 let timerInterval;
 const GRAVITY = 0.7;
 
+// --- SISTEMA DE LIKES (LOCAL STORAGE) ---
+let likes = parseInt(localStorage.getItem('pixelKombatLikes')) || 0;
+
+function updateLikeUI() {
+    const countEl = document.getElementById('like-count');
+    if (countEl) countEl.innerText = likes;
+}
+
+window.addLike = function() {
+    likes++;
+    localStorage.setItem('pixelKombatLikes', likes);
+    updateLikeUI();
+};
+
 // --- FUNÇÃO DE SELEÇÃO GLOBAL ---
 window.selectCharacter = function(charKey) {
     canvas = document.getElementById('gameCanvas');
@@ -22,11 +36,9 @@ window.selectCharacter = function(charKey) {
     canvas.height = 576;
 
     const p1Stats = CHARACTERS[charKey];
-    if (!p1Stats) {
-        alert("Personagem não encontrado!");
-        return;
-    }
+    if (!p1Stats) return;
 
+    // Seleciona um oponente aleatório para a CPU
     const keysArr = Object.keys(CHARACTERS);
     const p2Key = keysArr[Math.floor(Math.random() * keysArr.length)];
     const p2Stats = CHARACTERS[p2Key];
@@ -77,15 +89,18 @@ class Fighter {
     }
 
     draw() {
+        // Corpo
         ctx.fillStyle = this.stats.color;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
+        // Olhos / Direção
         ctx.fillStyle = "#000";
         const eyeX = this.facingLeft ? this.position.x + 10 : this.position.x + 40;
         ctx.fillRect(eyeX, this.position.y + 20, 10, 10);
 
+        // Visual do Ataque
         if (this.isAttacking) {
-            ctx.fillStyle = this.attackType === 'heavy' ? 'orange' : 'yellow';
+            ctx.fillStyle = this.attackType === 'heavy' ? '#ff9900' : '#ffff00';
             ctx.fillRect(
                 this.attackBox.position.x,
                 this.attackBox.position.y,
@@ -108,9 +123,11 @@ class Fighter {
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
+        // Limites horizontais
         if (this.position.x < 0) this.position.x = 0;
         if (this.position.x + this.width > canvas.width) this.position.x = canvas.width - this.width;
 
+        // Gravidade e Chão
         if (this.position.y + this.height + this.velocity.y >= canvas.height - 60) {
             this.velocity.y = 0;
             this.position.y = canvas.height - 60 - this.height;
@@ -139,11 +156,11 @@ class Fighter {
     updateAI(target) {
         const dist = target.position.x - this.position.x;
 
-        if (Math.abs(dist) > 80) {
+        if (Math.abs(dist) > 85) {
             this.velocity.x = dist > 0 ? this.stats.speed * 0.6 : -this.stats.speed * 0.6;
         } else {
             this.velocity.x = 0;
-            if (Math.random() < 0.03) {
+            if (Math.random() < 0.035) {
                 this.attack(Math.random() > 0.5 ? 'light' : 'heavy');
             }
         }
@@ -154,7 +171,7 @@ class Fighter {
     }
 }
 
-// --- CONTROLES ---
+// --- CONTROLES (TECLADO) ---
 const keys = { a: false, d: false };
 
 window.addEventListener('keydown', (e) => {
@@ -170,9 +187,9 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'd' || e.key === 'D') keys.d = false;
 });
 
-// --- SISTEMA DE DANO E HUD ---
+// --- COLISÕES E DANO ---
 function checkHit(attacker, defender) {
-    if (!attacker.isAttacking) return false;
+    if (!attacker.isAttacking) return;
 
     const hit = (
         attacker.attackBox.position.x < defender.position.x + defender.width &&
@@ -183,8 +200,8 @@ function checkHit(attacker, defender) {
 
     if (hit) {
         attacker.isAttacking = false;
-        const baseDamage = attacker.attackType === 'heavy' ? attacker.stats.power * 1.5 : attacker.stats.power;
-        defender.health -= baseDamage;
+        const damage = attacker.attackType === 'heavy' ? attacker.stats.power * 1.5 : attacker.stats.power;
+        defender.health -= damage;
         if (defender.health < 0) defender.health = 0;
         updateHUD();
     }
@@ -207,16 +224,19 @@ function startTimer() {
     }, 1000);
 }
 
-// --- LOOP DA ANIMAÇÃO ---
+// --- LOOP DE RENDEREZAÇÃO DA ARENA ---
 function animate() {
     gameLoopId = requestAnimationFrame(animate);
 
-    ctx.fillStyle = '#1a0f1a';
+    // Fundo da Arena
+    ctx.fillStyle = '#110a18';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = '#331122';
+    // Chão Pixelado
+    ctx.fillStyle = '#2b1020';
     ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
 
+    // Movimentação do Jogador 1
     player1.velocity.x = 0;
     if (keys.a) player1.velocity.x = -player1.stats.speed;
     if (keys.d) player1.velocity.x = player1.stats.speed;
@@ -227,14 +247,20 @@ function animate() {
     checkHit(player1, player2);
     checkHit(player2, player1);
 
+    // Fim da Rodada
     if (player1.health <= 0 || player2.health <= 0 || gameTime === 0) {
         cancelAnimationFrame(gameLoopId);
         clearInterval(timerInterval);
-        
+
         let winner = "EMPATE";
         if (player1.health > player2.health) winner = `${player1.stats.name} VENCEU!`;
         if (player2.health > player1.health) winner = `${player2.stats.name} VENCEU!`;
-        
+
         setTimeout(() => alert(`FIM DE JOGO: ${winner}`), 100);
     }
 }
+
+// Inicializa a UI ao carregar
+document.addEventListener('DOMContentLoaded', () => {
+    updateLikeUI();
+});
