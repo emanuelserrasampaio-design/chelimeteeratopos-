@@ -248,5 +248,19 @@ function animate() {
         if (player2.health > player1.health) winner = `${player2.stats.name} VENCEU!`;
         
         setTimeout(() => alert(`FIM DE JOGO: ${winner}`), 100);
-    }
+  // Ativa os botões de seleção de personagem com segurança
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.char-btn');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const charKey = button.getAttribute('data-char');
+            if (CHARACTERS[charKey]) {
+                selectCharacter(charKey);
+            } else {
+                console.error(`Personagem '${charKey}' não encontrado em CHARACTERS.`);
+            }
+        });
+    });
+});  }
 }
