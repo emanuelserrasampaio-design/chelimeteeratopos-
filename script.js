@@ -17,6 +17,7 @@ const CHARACTERS = {
 let player1, player2;
 let gameLoopId;
 let gameTime = 99;
+let timerInterval;
 
 // --- CLASSE DO LUTADOR ---
 class Fighter {
@@ -42,16 +43,16 @@ class Fighter {
     }
 
     draw() {
-        // CORPO (Substitua por ctx.drawImage quando tiver as spritesheet em Pixel Art)
+        // Corpo do Lutador
         ctx.fillStyle = this.stats.color;
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-        // Olhos/Direção
+        // Indicador de Olhos/Orientação
         ctx.fillStyle = "#000";
         const eyeX = this.facingLeft ? this.position.x + 10 : this.position.x + 40;
         ctx.fillRect(eyeX, this.position.y + 20, 10, 10);
 
-        // Visualização da Hitbox do Ataque
+        // Hitbox do Ataque
         if (this.isAttacking) {
             ctx.fillStyle = this.attackType === 'heavy' ? 'orange' : 'yellow';
             ctx.fillRect(
@@ -64,26 +65,21 @@ class Fighter {
     }
 
     update(target) {
-        // Atualiza orientação
         if (target) {
             this.facingLeft = this.position.x > target.position.x;
         }
 
-        // Posição da Hitbox baseada na orientação
         this.attackBox.position.x = this.facingLeft 
             ? this.position.x - this.attackBox.width 
             : this.position.x + this.width;
         this.attackBox.position.y = this.position.y + 30;
 
-        // Movimento e Gravidade
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
-        // Limites da tela
         if (this.position.x < 0) this.position.x = 0;
         if (this.position.x + this.width > canvas.width) this.position.x = canvas.width - this.width;
 
-        // Chão
         if (this.position.y + this.height + this.velocity.y >= canvas.height - 60) {
             this.velocity.y = 0;
             this.position.y = canvas.height - 60 - this.height;
@@ -109,7 +105,6 @@ class Fighter {
         }, duration);
     }
 
-    // IA básica para o P2
     updateAI(target) {
         const dist = target.position.x - this.position.x;
 
@@ -129,10 +124,7 @@ class Fighter {
 }
 
 // --- CONTROLES ---
-const keys = {
-    a: false, d: false, w: false,
-    j: false, k: false
-};
+const keys = { a: false, d: false };
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'a' || e.key === 'A') keys.a = true;
@@ -147,7 +139,7 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'd' || e.key === 'D') keys.d = false;
 });
 
-// --- COLISÃO ---
+// --- COLISÃO E HUD ---
 function checkHit(attacker, defender) {
     if (!attacker.isAttacking) return false;
 
@@ -159,7 +151,7 @@ function checkHit(attacker, defender) {
     );
 
     if (hit) {
-        attacker.isAttacking = false; // Garante 1 hit por ataque
+        attacker.isAttacking = false;
         const baseDamage = attacker.attackType === 'heavy' ? attacker.stats.power * 1.5 : attacker.stats.power;
         defender.health -= baseDamage;
         if (defender.health < 0) defender.health = 0;
@@ -179,7 +171,6 @@ function updateHUD() {
 function selectCharacter(charKey) {
     const p1Stats = CHARACTERS[charKey];
     
-    // Escolhe um oponente aleatório para a IA
     const keysArr = Object.keys(CHARACTERS);
     const p2Key = keysArr[Math.floor(Math.random() * keysArr.length)];
     const p2Stats = CHARACTERS[p2Key];
@@ -207,7 +198,7 @@ function selectCharacter(charKey) {
 }
 
 function startTimer() {
-    setInterval(() => {
+    timerInterval = setInterval(() => {
         if (gameTime > 0) {
             gameTime--;
             document.getElementById('timer').innerText = gameTime;
@@ -219,36 +210,38 @@ function startTimer() {
 function animate() {
     gameLoopId = requestAnimationFrame(animate);
 
-    // Fundo do Cenário
+    // Fundo
     ctx.fillStyle = '#1a0f1a';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Chão Pixelado
+    // Chão
     ctx.fillStyle = '#331122';
     ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
 
-    // Movimentação P1
+    // Movimento P1
     player1.velocity.x = 0;
     if (keys.a) player1.velocity.x = -player1.stats.speed;
     if (keys.d) player1.velocity.x = player1.stats.speed;
 
-    // Atualiza lutadores
     player1.update(player2);
     player2.update(player1);
 
-    // Checa Acertos
     checkHit(player1, player2);
     checkHit(player2, player1);
 
-    // Checa Fim de Jogo
     if (player1.health <= 0 || player2.health <= 0 || gameTime === 0) {
         cancelAnimationFrame(gameLoopId);
+        clearInterval(timerInterval);
+        
         let winner = "EMPATE";
         if (player1.health > player2.health) winner = `${player1.stats.name} VENCEU!`;
         if (player2.health > player1.health) winner = `${player2.stats.name} VENCEU!`;
         
         setTimeout(() => alert(`FIM DE JOGO: ${winner}`), 100);
-  // Ativa os botões de seleção de personagem com segurança
+    }
+}
+
+// --- VINCULAÇÃO DOS BOTÕES DE SELEÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
     const buttons = document.querySelectorAll('.char-btn');
     
@@ -257,31 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const charKey = button.getAttribute('data-char');
             if (CHARACTERS[charKey]) {
                 selectCharacter(charKey);
-            } else {
-                console.error(`Personagem '${charKey}' não encontrado em CHARACTERS.`);
-          // Detecta cliques diretos no Canvas
-canvas.addEventListener('click', (event) => {
-    // Pega a posição do Canvas na tela
-    const rect = canvas.getBoundingClientRect();
-    
-    // Calcula a posição do clique em pixels em relação ao Canvas
-    const clickX = (event.clientX - rect.left) * (canvas.width / rect.width);
-    const clickY = (event.clientY - rect.top) * (canvas.height / rect.height);
-
-    // Testa se clicou no Jogador 1
-    if (
-        player1 &&
-        clickX >= player1.position.x &&
-        clickX <= player1.position.x + player1.width &&
-        clickY >= player1.position.y &&
-        clickY <= player1.position.y + player1.height
-    ) {
-        console.log(`Você clicou no ${player1.stats.name}!`);
-        // Aqui você pode fazer algo, como dar um pulo ou tocar um som
-        player1.velocity.y = -10; 
-    }
-});  }
+            }
         });
     });
-});  }
-}
+});
